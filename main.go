@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ylmz/ders-api/models"
 	"github.com/ylmzemre/ders-api/config"
 	"github.com/ylmzemre/ders-api/handlers"
+	"github.com/ylmzemre/ders-api/models"
 	"os"
 )
 
