@@ -1,4 +1,4 @@
-module lessonSchedule
+module github.com/ylmzemre/Schelude-API
 
 go 1.24
 
