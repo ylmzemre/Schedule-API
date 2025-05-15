@@ -1,37 +1,24 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/ylmzemre/ders-api/config"
-	"github.com/ylmzemre/ders-api/handlers"
-	"github.com/ylmzemre/ders-api/models"
-	"os"
+	"github.com/joho/godotenv"
+	"github.com/labstack/echo/v4"
+	"github.com/ylmzemre/Schelude-API/config"
+	"net/http"
 )
 
 func main() {
-	// 1. DB Bağlantısı
-	config.ConnectDatabase()
+	e := echo.New()
+	config.newPostgresConnection()
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, World!")
+	})
+	e.Logger.Fatal(e.Start(":1323"))
 
-	// 2. Migrasyon
-	config.DB.AutoMigrate(&models.Ders{})
-
-	// 3. Router
-	r := gin.Default()
-
-	// 4. Route’lar
-	ders := r.Group("/ders")
-	{
-		ders.POST("", handlers.CreateDers)
-		ders.GET("", handlers.GetDersler)
-		ders.GET("/:id", handlers.GetDers)
-		ders.PUT("/:id", handlers.UpdateDers)
-		ders.DELETE("/:id", handlers.DeleteDers)
+	err := godotenv.Load()
+	if err != nil {
+		e.Logger.Fatal("Error loading .env file")
 	}
 
-	// 5. Çalıştır
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-	r.Run(":" + port)
+	// now do something with s3 or whatever
 }

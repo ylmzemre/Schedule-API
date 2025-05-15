@@ -7,20 +7,15 @@ import (
 	"os"
 )
 
-var DB *gorm.DB
+func newPostgresConnection() {
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
 
-func ConnectDatabase() {
-	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASS"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PORT"),
-	)
+	dsn := fmt.Sprintf("host=%s user=%s pass=%s name=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, dbname, port)
+	fmt.Println(dsn)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect database: " + err.Error())
-	}
-	DB = db
+	fmt.Println(db, err)
 }
