@@ -2,20 +2,39 @@ package config
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 	"os"
 )
 
-func newPostgresConnection() {
+var (
+	DB *gorm.DB
+)
+
+func GetDB() (*gorm.DB, error) {
+
+	_ = godotenv.Load()
+
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
 	password := os.Getenv("DB_PASSWORD")
-	dbname := os.Getenv("DB_NAME")
+	name := os.Getenv("DB_NAME")
 
-	dsn := fmt.Sprintf("host=%s user=%s pass=%s name=%s port=%s sslmode=disable TimeZone=Asia/Shanghai", host, user, password, dbname, port)
-	fmt.Println(dsn)
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	fmt.Println(db, err)
+	dsn := fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
+		host, user, password, name, port,
+	)
+	log.Println(dsn)
+	var err error
+	DB, err = gorm.Open(postgres.Open(dsn))
+	if err != nil {
+		log.Fatalf("GORM bağlantı hatası: %v", err)
+	}
+
+	log.Println("PostgreSQL + GORM bağlantısı hazır")
+
+	return DB, nil
 }
