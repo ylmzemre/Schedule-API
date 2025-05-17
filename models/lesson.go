@@ -1,18 +1,16 @@
 package models
 
-import (
-	"gorm.io/gorm"
-	"time"
-)
+import "gorm.io/gorm"
 
-type Lessons struct {
-	gorm.Model
-	lessonName  string    `gorm:"type:varchar(30); not null;"`
-	lessonID    int       `gorm:"type:int; not null; unique;"`
-	lessonStart time.Time `gorm:"type:timestamp; not null;"`
-	lessonEnd   time.Time `gorm:"type:timestamp; not null;"`
-}
-
-func (receiver Lessons) TableName() string {
-	return "lessons"
+type Lesson struct {
+	ID          uint           `json:"id" gorm:"primaryKey"`
+	Title       string         `json:"title"`
+	Description string         `json:"description"`
+	DayOfWeek   int            `json:"day_of_week"` // 1=Mon ... 7=Sun
+	StartTime   string         `json:"start_time"`  // “14:00”
+	EndTime     string         `json:"end_time"`    // “15:30”
+	Students    []Student      `json:"students,omitempty" gorm:"many2many:student_lessons;"`
+	CreatedAt   int64          `json:"created_at"`
+	UpdatedAt   int64          `json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"index" json:"-"`
 }
