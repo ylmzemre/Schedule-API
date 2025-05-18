@@ -30,6 +30,12 @@ func main() {
 	authH := handlers.NewAuthHandler(studentSvc)
 
 	routes.Register(app, authH, studentH, lessonH)
+	port := config.Cfg.Port
+	log.Printf("🚀  API is running on http://localhost:%s\n", port)
+	if err := app.Listen(":" + port); err != nil {
+		log.Fatalf("Fiber Listen error: %v", err)
+	}
 
 	log.Fatal(app.Listen(":" + config.Cfg.Port))
+
 }

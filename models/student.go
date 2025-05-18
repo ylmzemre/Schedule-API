@@ -1,15 +1,21 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Student struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	FirstName string         `json:"first_name"`
-	LastName  string         `json:"last_name"`
-	Email     string         `json:"email" gorm:"uniqueIndex"`
-	Password  string         `json:"-"`                 // hashed
-	Lessons   []Lesson       `json:"lessons,omitempty"` // many-to-many
-	CreatedAt int64          `json:"created_at"`
-	UpdatedAt int64          `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"-" gorm:"index"`
+	ID        uint   `gorm:"primaryKey" json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `gorm:"uniqueIndex" json:"email"`
+	Password  string `json:"-"`
+
+	Lessons []Lesson `gorm:"many2many:student_lessons" json:"lessons,omitempty"`
+
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
